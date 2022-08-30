@@ -1,5 +1,5 @@
 """
-Generate initial data for xPos, yPos, dir, and 99pos variables used in NN model
+Generate initial data for xTemp, yVolume, direction, and target variables used in NN model
 
 @author: Doug Cady
 
@@ -29,7 +29,7 @@ DIAGONAL_RIGHT = set([1, 3])
 
 OUTPUT_COLUMNS = [
 	'xTemp',
-	'yVol',
+	'yVolume',
 	'direction',
 	'target'
 ]
@@ -54,8 +54,6 @@ DIRECTION_DELTA_MAP = {
 }
 
 
-
-
 def left_edge(xTemp: int) -> bool:
 	return xTemp == 0
 
@@ -64,48 +62,48 @@ def right_edge(xTemp: int) -> bool:
 	return xTemp == NUM_TEMP_POSITIONS - 1
 
 
-def top_edge(yVol: int) -> bool:
-	return yVol == 0
+def top_edge(yVolume: int) -> bool:
+	return yVolume == 0
 
 
-def bot_edge(yVol: int) -> bool:
-	return yVol == NUM_VOLUME_POSITIONS - 1
+def bot_edge(yVolume: int) -> bool:
+	return yVolume == NUM_VOLUME_POSITIONS - 1
 
 
-def on_edge(xTemp: int, yVol: int) -> bool:
-	return left_edge(xTemp) | right_edge(xTemp) | top_edge(yVol) | bot_edge(yVol)
+def on_edge(xTemp: int, yVolume: int) -> bool:
+	return left_edge(xTemp) | right_edge(xTemp) | top_edge(yVolume) | bot_edge(yVolume)
 
 
-def top_left_corner(xTemp: int, yVol: int) -> bool:
-	return top_edge(yVol) & left_edge(xTemp)
+def top_left_corner(xTemp: int, yVolume: int) -> bool:
+	return top_edge(yVolume) & left_edge(xTemp)
 
 
-def top_right_corner(xTemp: int, yVol: int) -> bool:
-	return top_edge(yVol) & right_edge(xTemp)
+def top_right_corner(xTemp: int, yVolume: int) -> bool:
+	return top_edge(yVolume) & right_edge(xTemp)
 
 
-def bot_right_corner(xTemp: int, yVol: int) -> bool:
-	return bot_edge(yVol) & right_edge(xTemp)
+def bot_right_corner(xTemp: int, yVolume: int) -> bool:
+	return bot_edge(yVolume) & right_edge(xTemp)
 
 
-def bot_left_corner(xTemp: int, yVol: int) -> bool:
-	return bot_edge(yVol) & left_edge(xTemp)
+def bot_left_corner(xTemp: int, yVolume: int) -> bool:
+	return bot_edge(yVolume) & left_edge(xTemp)
 
 
-def calc_target(xTemp: int, yVol: int, direction: int) -> int:
+def calc_target(xTemp: int, yVolume: int, direction: int) -> int:
 	"""Calculate target position and return as an int."""
 	for i in range(NUM_MOVEMENTS):
 		if direction in UP_DOWN:
-			if top_edge(yVol=yVol) & (direction == UP):
-				yVol = yVol + 1
+			if top_edge(yVolume=yVolume) & (direction == UP):
+				yVolume = yVolume + 1
 				direction = DOWN
 
-			elif bot_edge(yVol=yVol) & (direction == DOWN):
-				yVol = yVol - 1
+			elif bot_edge(yVolume=yVolume) & (direction == DOWN):
+				yVolume = yVolume - 1
 				direction = UP
 
 			else:
-				yVol += DIRECTION_DELTA_MAP[direction].y
+				yVolume += DIRECTION_DELTA_MAP[direction].y
 
 		elif direction in RIGHT_LEFT:
 			if left_edge(xTemp=xTemp) & (direction == LEFT):
@@ -121,98 +119,88 @@ def calc_target(xTemp: int, yVol: int, direction: int) -> int:
 			
 		# Diagonal movement
 		else:
-			if top_left_corner(xTemp=xTemp, yVol=yVol):
+			if top_left_corner(xTemp=xTemp, yVolume=yVolume):
 				xTemp = xTemp + 1
-				yVol = yVol + 1
+				yVolume = yVolume + 1
 				direction = 3
 
-			elif top_right_corner(xTemp=xTemp, yVol=yVol):
+			elif top_right_corner(xTemp=xTemp, yVolume=yVolume):
 				xTemp = xTemp - 1
-				yVol = yVol + 1
+				yVolume = yVolume + 1
 				direction = 5
 
-			elif bot_right_corner(xTemp=xTemp, yVol=yVol):
+			elif bot_right_corner(xTemp=xTemp, yVolume=yVolume):
 				xTemp = xTemp - 1
-				yVol = yVol - 1
+				yVolume = yVolume - 1
 				direction = 7
 
-			elif bot_left_corner(xTemp=xTemp, yVol=yVol):
+			elif bot_left_corner(xTemp=xTemp, yVolume=yVolume):
 				xTemp = xTemp + 1
-				yVol = yVol - 1
+				yVolume = yVolume - 1
 				direction = 1
 
 			# Not in a corner, on an edge
-			elif top_edge(yVol=yVol):
+			elif top_edge(yVolume=yVolume):
 				if direction in DIAGONAL_RIGHT:
 					xTemp = xTemp + 1
-					yVol = yVol + 1
+					yVolume = yVolume + 1
 					direction = 3
 				else:
 					xTemp = xTemp - 1
-					yVol = yVol + 1
+					yVolume = yVolume + 1
 					direction = 5
 
-			elif bot_edge(yVol=yVol):
+			elif bot_edge(yVolume=yVolume):
 				if direction in DIAGONAL_RIGHT:
 					xTemp = xTemp + 1
-					yVol = yVol - 1
+					yVolume = yVolume - 1
 					direction = 1
 				else:
 					xTemp = xTemp - 1
-					yVol = yVol - 1
+					yVolume = yVolume - 1
 					direction = 7
 
 			elif left_edge(xTemp=xTemp):
 				if direction in DIAGONAL_UP:
 					xTemp = xTemp + 1
-					yVol = yVol - 1
+					yVolume = yVolume - 1
 					direction = 1
 				else:
 					xTemp = xTemp + 1
-					yVol = yVol + 1
+					yVolume = yVolume + 1
 					direction = 3
 
 			elif right_edge(xTemp=xTemp):
 				if direction in DIAGONAL_UP:
 					xTemp = xTemp - 1
-					yVol = yVol - 1
+					yVolume = yVolume - 1
 					direction = 7
 				else:
 					xTemp = xTemp - 1
-					yVol = yVol + 1
+					yVolume = yVolume + 1
 					direction = 5
 
 			# In middle of grid, not on corner or edge
 			else:
 				xTemp = xTemp + DIRECTION_DELTA_MAP[direction].x
-				yVol = yVol + DIRECTION_DELTA_MAP[direction].y
+				yVolume = yVolume + DIRECTION_DELTA_MAP[direction].y
 
-		# print(f"i: {i+1} | xTemp: {xTemp} | yVol: {yVol} | direction: {direction}")
-
-	return (10 * yVol) + xTemp
+	return (10 * yVolume) + xTemp
 
 
 def main() -> int:
 	out_list = []
 
 	for xTemp in range(NUM_TEMP_POSITIONS):
-		for yVol in range(NUM_VOLUME_POSITIONS):
+		for yVolume in range(NUM_VOLUME_POSITIONS):
 			for direction in range(NUM_DIRECTIONS):
-				target = calc_target(xTemp=xTemp, yVol=yVol, direction=direction)
-				row_list = [xTemp, yVol, direction, target]
+				target = calc_target(xTemp=xTemp, yVolume=yVolume, direction=direction)
+				row_list = [xTemp, yVolume, direction, target]
 				out_list.append(row_list)
 
 	data = pd.DataFrame(out_list, columns = OUTPUT_COLUMNS)
 	data.to_csv("../data/tenByTenModelData.csv", index=False)
 
-	# xTemp = 1
-	# yVol = 0
-	# direction = 5
-	# target = calc_target(xTemp=xTemp, yVol=yVol, direction=direction)
-	# row_list = [xTemp, yVol, direction, target]
-	# out_list.append(row_list)
-
-	# print(out_list)
 
 if __name__ == '__main__':
 	main()
