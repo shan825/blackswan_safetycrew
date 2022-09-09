@@ -1,7 +1,9 @@
-""
-Created on Tue Sep  6 15:41:41 2022
+"""
+Created on Thu Sep  8 16:48:25 2022
 
-@author: reiva
+@author: Kelly Johnson
+Recreate 1x10 (Experiment1.1) from Sp22 Class work
+with guidance from sample code snippets from Dr.Sherry
 """
 
 import pandas as pd
@@ -10,22 +12,28 @@ import numpy as np
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 sc = StandardScaler()
+import matplotlib.pyplot as plt
+import statistics
 
 """ Experiment 1.1 : Complete dataset for training and testing"""
 
-data = pd.read_csv('data690_last.csv')
+#dataset that was recreated using https://github.com/ekamineni/DAEN690/blob/main/DataGeneration_Experiment1.py from lines 7:104#
+data = pd.read_csv('exp1.1_dataset.csv')
 
 m = len(data)
+
 ## Splitting Dataset ###
 X = data.iloc[:,:2].values
 Y = data.iloc[:,-1].values
 
 # Splitting dataset into training and testing dataset
-
-
-X_train, X_test_un, Y_train, Y_test = train_test_split(X, Y, test_size=0.25, random_state=0, stratify=Y)
+X_train, X_test_un, Y_train, Y_test = train_test_split(X, Y, test_size=0.25, random_state=42) #stratify=Y)
+X_test_dup = X_test_un
 X_train = sc.fit_transform(X_train)
 X_test = sc.transform(X_test_un)
+X_full_test = sc.transform(X_test_un)#X_full_test_un)
+
+# Build the model
 ann = tf.keras.models.Sequential()
 
 # five layer ANN
@@ -34,16 +42,38 @@ ann.add(tf.keras.layers.Dense(20, input_dim= 2, kernel_initializer='he_uniform',
 ann.add(tf.keras.layers.Dense(20, input_dim= 2, kernel_initializer='he_uniform', activation='relu'))
 ann.add(tf.keras.layers.Dense(20, input_dim= 2, kernel_initializer='he_uniform', activation='relu'))
 ann.add(tf.keras.layers.Dense(20, input_dim= 2, kernel_initializer='he_uniform', activation='relu'))
-
 ann.add(tf.keras.layers.Dense(1))
-
 ann.compile(optimizer="adam", loss='mae', metrics=['accuracy'])
-model = ann.fit(X_train, Y_train, epochs=100, verbose=0)
 
+#Fit full model to visualize loss and accuracy Using validation_split
+full_model = ann.fit(X,Y,validation_split=0.25, epochs=1000,verbose=0,batch_size=150)
+print(full_model.history.keys())
+# summarize history for accuracy
+fig = plt.figure()
+plt.plot(full_model.history['accuracy'])
+plt.plot(full_model.history['val_accuracy'])
+plt.title("1x10 Model Accuracy Using Validation_Split")
+plt.ylabel("Accuracy")
+plt.xlabel("Epoch")
+plt.legend(['Train', 'Test'], loc='lower right')
+fig.show()
+# summarize history for loss
+fig2=plt.figure()
+plt.plot(full_model.history['loss'])
+plt.plot(full_model.history['val_loss'])
+plt.title('1x10 Model Loss Using Validation_split')
+plt.ylabel('Loss')
+plt.xlabel('Epoch')
+plt.legend(['Train', 'Test'], loc='lower right')
+plt.show()
 
+# Fit the model 
+model = ann.fit(X_train, Y_train, epochs=1000, verbose=0)
+test_loss,test_accuracy=ann.evaluate(X_test,Y_test)
+print("test loss,test accuaracy",test_loss,test_accuracy)
 Y_pred = ann.predict(X_test)
-#Y_pred
-
+Y_full_pred = ann.predict(X)
+Y_pred = ann.predict(X_test)
 Y_pred = np.round(Y_pred, 0)
 Y_pred = np.round(abs(Y_pred))
 Y_pred = pd.DataFrame(Y_pred)
@@ -56,8 +86,11 @@ pred_test_df.columns=['Y_pred','Y_test']
 
 Actual_pred_test_df = pd.DataFrame(X_test_un,columns = ["objixPos", "objiDir"])
 Actual_pred_test_df = pd.concat([Actual_pred_test_df,pred_test_df], axis = 1)
-#print(Actual_pred_test_df.head())
-Actual_pred_test_df.to_csv('C:/Users/reiva/Exp1.1_fulldataset+pred.csv', index= False)
+print(Actual_pred_test_df.head())
+Actual_pred_test_df.to_csv('.../Exp1.1_fulldataset+pred.csv', index= False)
+
+
+########## STOP HERE....NEED TO RECHECK ALL BELOW ############
 
 
 """ Experiment 1.2 : 80% initial conditions for training """
