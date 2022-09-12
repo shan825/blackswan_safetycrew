@@ -1,4 +1,4 @@
-# blackswan_safetycrew
+# H1 Black Swan Safety Crew
 DAEN 690 Project Repo
 
 This is where the information for Black Swan Safety Crew's will go
