@@ -1,7 +1,7 @@
 George Mason University (GMU) - DAEN 690 Capstone Project Fall 2022
 ===================================================================
-- Faculty Advisor: [Dr. F. Brett Berlin][https://volgenau.gmu.edu/profiles/fberlin], Term Faculty, GMU Data Analytics Engineering M.S. Program.
-- Partner/Customer: [Dr. Lance Sherry][https://volgenau.gmu.edu/profiles/lsherry], Associate Professor in the GMU Systems Engineering and Operations Research Department and Director of the Center for Air Transportation Systems Research at the GMU Volgenau School of Engineering.
+- Faculty Advisor: [Dr. F. Brett Berlin](https://volgenau.gmu.edu/profiles/fberlin), Term Faculty, GMU Data Analytics Engineering M.S. Program.
+- Partner/Customer: [Dr. Lance Sherry](https://volgenau.gmu.edu/profiles/lsherry), Associate Professor in the GMU Systems Engineering and Operations Research Department and Director of the Center for Air Transportation Systems Research at the GMU Volgenau School of Engineering.
 - Team Name: Black Swan Safety Crew
 
 Modern systems, like aircraft or ships, are comprised of numerous complex sub-systems.  Such a system of systems is difficult to architect, develop, and test within planned funding and time constraints.  Moreover, these systems can be hard to upgrade or maintain due to multiple configuration baselines over time.  These baselines arise from a variety of reasons to include end of life hardware, operating system or other infrastructure changes, or new capabilities.  This translates into numerous configuration baselines with multiple combinations of software and hardware.
