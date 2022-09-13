@@ -46,6 +46,9 @@ To execute the codebase, each of the team developers used a different integrated
 Change Log
 ----------
 09-12-2022: Multiple updates to the readme file.
+
 09-12-2022: Committed another iteration of a multi-class classification TensorFlow model.
+
 09-06-2022: Committed Sprint22TestCode.py.  Used previous team's code with our dataset and produced similar accuracy results.
+
 08-30-2022: The Github has been set up and the team is at work currently deciding how to tackle this problem, and the best methods and packages to use.
