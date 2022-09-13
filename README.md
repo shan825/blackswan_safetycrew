@@ -18,7 +18,7 @@ The team developed and trained hand-coded models using the following libraries:
 - TensorFlow
 - Keras
 
-In addition, the team leveraged the Momentum AI low-code/no-code toolkit hosted on Amazon Web Services (AWS).  According to the [Accure website][https://accure.ai/momentum-ai/], Momentum democratizes AI by providing no-coding toolkits to rapidly train and deploy ML models in production, thus increasing the overall productivity of the data science team.  No specialized skill is needed to work with Momentum.
+In addition, the team leveraged the Momentum AI low-code/no-code toolkit hosted on Amazon Web Services (AWS).  According to the [Accure website](https://accure.ai/momentum-ai/), Momentum democratizes AI by providing no-coding toolkits to rapidly train and deploy ML models in production, thus increasing the overall productivity of the data science team.  No specialized skill is needed to work with Momentum.
 
 
 
