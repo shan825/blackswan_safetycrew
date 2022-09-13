@@ -240,7 +240,7 @@ def main() -> int:
     time_elapsed = time.time() - start_time
     minutes = time_elapsed // 60
     seconds = time_elapsed % 60
-    print(f"[+] Program finished in {minutes}:{seconds:0.2f}s")
+    print(f"[+] Program finished in {int(minutes)}m:{seconds:0.2f}s")
 
 
 if __name__ == '__main__':
