@@ -10,25 +10,35 @@ import time
 import pandas as pd
 import torch as T
 from sklearn.model_selection import train_test_split
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 
 INPUT_DATA_PATH = "../data/norm_tenByTenModelData.csv"
 DEVICE = T.device("cuda:0" if T.cuda.is_available() else "cpu")
 
 # Training/Testing Parameters
-RANDOM_SEED = 111
+RANDOM_SEED = 24
 TESTING_SPLIT_PERC = 0.3
 
 # Model Parameters
-MAX_EPOCHS = 16000
-EP_LOG_INTERVAL = 500
+ACTIVATION_FUNC = 'Relu'
+HIDDEN_LAYER_NODE_1 = 512
+HIDDEN_LAYER_NODE_2 = 128
+HIDDEN_LAYER_NODE_3 = 64
+
+MAX_EPOCHS = 2_000
+EP_LOG_INTERVAL = MAX_EPOCHS / 4
 BATCH_SIZE = 40
-LEARNING_RATE = 0.03
+LEARNING_RATE = 0.037
+
 NUM_FEATURES = 3
-HIDDEN_LAYER_NODES = 64
 NUM_CLASSES = 100
 
-SAVED_MODEL_FN = f"../models/norm_10x10PyTorchNN3LEpochs{MAX_EPOCHS}Learn{LEARNING_RATE}.pt"
+SAVED_MODEL_FN = f"../models/PyTor_{ACTIVATION_FUNC}4L{HIDDEN_LAYER_NODE_1}-{HIDDEN_LAYER_NODE_2}-" + \
+    f"{HIDDEN_LAYER_NODE_3}N{MAX_EPOCHS}E{LEARNING_RATE}Lr{BATCH_SIZE}Bs{RANDOM_SEED}Rs.pt"
+
+TRAINING_LOSS_PLOTDATA_FN = f"../plot_data/PyTor_EpochPlot_4L{MAX_EPOCHS}E{LEARNING_RATE}Lr{RANDOM_SEED}Rs.csv"
 
 
 class ModelDataset(T.utils.data.Dataset):
@@ -44,26 +54,32 @@ class ModelDataset(T.utils.data.Dataset):
         targets = self.y_data[idx]
         return predictions, targets
 
-    
+
 class Net(T.nn.Module):
     def __init__(self):
         super(Net, self).__init__()
-        self.hid1 = T.nn.Linear(NUM_FEATURES, 64)  # 3-(64-64)-100
-        self.hid2 = T.nn.Linear(64, 64)
-        self.oupt = T.nn.Linear(64, NUM_CLASSES)
+        self.hid1 = T.nn.Linear(NUM_FEATURES, HIDDEN_LAYER_NODE_1)   # 3-(512-128-64)-100
+        self.hid2 = T.nn.Linear(HIDDEN_LAYER_NODE_1, HIDDEN_LAYER_NODE_2)
+        # self.dropout = T.nn.Dropout(p = 0.2)
+        self.hid3 = T.nn.Linear(HIDDEN_LAYER_NODE_2, HIDDEN_LAYER_NODE_3)
+        self.output = T.nn.Linear(HIDDEN_LAYER_NODE_3, NUM_CLASSES)
 
-        T.nn.init.xavier_uniform_(self.hid1.weight)
-        T.nn.init.zeros_(self.hid1.bias)
-        T.nn.init.xavier_uniform_(self.hid2.weight)
-        T.nn.init.zeros_(self.hid2.bias)
-        T.nn.init.xavier_uniform_(self.oupt.weight)
-        T.nn.init.zeros_(self.oupt.bias)
+        # T.nn.init.xavier_uniform_(self.hid1.weight)
+        # T.nn.init.zeros_(self.hid1.bias)
+        # T.nn.init.xavier_uniform_(self.hid2.weight)
+        # T.nn.init.zeros_(self.hid2.bias)
+        # T.nn.init.xavier_uniform_(self.hid3.weight)
+        # T.nn.init.zeros_(self.hid3.bias)
+        # T.nn.init.xavier_uniform_(self.output.weight)
+        # T.nn.init.zeros_(self.output.bias)
 
     def forward(self, x):
         # Try tanh() or relu() to see which performs better
-        z = T.tanh(self.hid1(x))
-        z = T.tanh(self.hid2(z))
-        z = T.log_softmax(self.oupt(z), dim=1)  # NLLLoss() 
+        z = T.relu(self.hid1(x))
+        z = T.relu(self.hid2(z))
+        # z = self.dropout(z)
+        z = T.relu(self.hid3(z))
+        z = T.log_softmax(self.output(z), dim=1)  # NLLLoss() 
         return z
 
 
@@ -90,14 +106,15 @@ def split_train_test_holdout(x_all: np.array, y_all: np.array):
 
     train = {}
     test = {}
-    train['x'], test['x'], train['y'], test['y'] = train_test_split(x, y, test_size=TESTING_SPLIT_PERC, 
-                                                              random_state=RANDOM_SEED)
+    train['x'], test['x'], train['y'], test['y'] = train_test_split(
+        x, y, test_size=TESTING_SPLIT_PERC, random_state=RANDOM_SEED
+    )
 
-    print(f"[+] Split into training, testing, and holdout datasets:")
-    print(f"[+] - x Training: {len(train['x'])} rows ({len(train['x'])/len(x) * 100:.0f}%)")
-    print(f"[+] - y Training: {len(train['y'])} rows ({len(train['y'])/len(y) * 100:.0f}%)")
-    print(f"[+] - x Testing: {len(test['x'])} ({len(test['x'])/len(x) * 100:.0f}%)")
-    print(f"[+] - y Testing: {len(test['y'])} ({len(test['y'])/len(y) * 100:.0f}%)")
+    print(f"[+] Split into training, testing, and holdout datasets")
+    # print(f"[+] - x Training: {len(train['x'])} rows ({len(train['x'])/len(x) * 100:.0f}%)")
+    # print(f"[+] - y Training: {len(train['y'])} rows ({len(train['y'])/len(y) * 100:.0f}%)")
+    # print(f"[+] - x Testing: {len(test['x'])} ({len(test['x'])/len(x) * 100:.0f}%)")
+    # print(f"[+] - y Testing: {len(test['y'])} ({len(test['y'])/len(y) * 100:.0f}%)")
 
     return train, test, holdout
 
@@ -108,49 +125,25 @@ def to_class_dataset(train, test):
             ModelDataset(test['x'], test['y']))
 
 
-# def calc_class_weights(y: pd.DataFrame):
-#     """Calculate class weights based off target dataframe."""
-#     print(f"[+] Calculating class weights...")
-    
-#     class_count = y.copy()
-#     class_count['count'] = 1
-#     class_df_gb = pd.DataFrame(class_count.groupby('target')['count'].count()).reset_index()
-    
-#     class_weights = 1. / T.tensor(class_df_gb['count'], dtype=T.float)
-#     return class_weights
-
-
-# def set_dataloader(class_weights_all, train_ds, test_ds, valid_ds):
-#     """Set up data loaders from T tensors."""
-#     weighted_sampler = WeightedRandomSampler(
-#         weights=class_weights_all,
-#         num_samples=len(class_weights_all),
-#         replacement=True
-#     )
-
-#     return (DataLoader(dataset=train_ds,
-#                        batch_size=BATCH_SIZE,
-#                        sampler=weighted_sampler),
-#             DataLoader(dataset=test_ds, batch_size=1),
-#             DataLoader(dataset=valid_ds, batch_size=1))
-
-
 def train_model(train_ds, test_ds):
     """Use input training data to train a neural network and testing data to calculate accuracy."""
     train_loader = T.utils.data.DataLoader(train_ds, batch_size=BATCH_SIZE, shuffle=True)
 
-    print(f"[+] Creating {NUM_FEATURES}-({HIDDEN_LAYER_NODES}-{HIDDEN_LAYER_NODES})-{NUM_CLASSES} neural network...")
+    print(f"[+] Creating {NUM_FEATURES}-({HIDDEN_LAYER_NODE_1}-{HIDDEN_LAYER_NODE_2}-{HIDDEN_LAYER_NODE_3})-{NUM_CLASSES} neural network...")
     NN = Net().to(DEVICE)
     NN.train()
 
     loss_func = T.nn.NLLLoss()  # assumes log_softmax()
     optimizer = T.optim.SGD(NN.parameters(), lr=LEARNING_RATE)
+    loss_stats = []
+    # scheduler = T.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min')
 
-    print(f"[+] 3L, tanh, batch_size={BATCH_SIZE}, epochs={MAX_EPOCHS}, learn_rate={LEARNING_RATE}")
+    print(f"[+] 4L, {ACTIVATION_FUNC}, batch_size={BATCH_SIZE}, epochs={MAX_EPOCHS}", \
+        f"hidden={HIDDEN_LAYER_NODE_1, HIDDEN_LAYER_NODE_2, HIDDEN_LAYER_NODE_3}, learn_rate={LEARNING_RATE}")
     print("[+] Training model...")
 
     for epoch in range(0, MAX_EPOCHS):
-        T.manual_seed(epoch+1) # for testing purposes only
+        T.manual_seed(epoch + 1) # for testing purposes only
         epoch_loss = 0
 
         for batch in train_loader:
@@ -158,17 +151,20 @@ def train_model(train_ds, test_ds):
             Y = batch[1] # target label
 
             optimizer.zero_grad()
-            oupt = NN(X)
-            loss_val = loss_func(oupt, Y) # a tensor
+            output = NN(X)
+            loss_val = loss_func(output, Y) # a tensor
             epoch_loss += loss_val.item() # accumulate loss
             loss_val.backward()
             optimizer.step()
+            # scheduler.step(epoch_loss)  # change learning rate if training loss stagnates
+            
+        loss_stats.append(epoch_loss / len(train_loader))
 
         if epoch % EP_LOG_INTERVAL == 0:
             print(f"[+] - epoch = {epoch:>5} | loss = {epoch_loss:8.4f}")
 
     print("[+] Training done")
-    return NN
+    return NN, loss_stats
 
 
 def calc_model_accuracy(model, ds):
@@ -181,9 +177,9 @@ def calc_model_accuracy(model, ds):
         Y = ds[i][1].reshape(1) # 1 dim
 
         with T.no_grad():
-            oupt = model(X) # logits form
+            output = model(X) # logits form
 
-        if T.argmax(oupt) == Y:
+        if T.argmax(output) == Y:
             n_correct += 1
         else:
             n_wrong += 1
@@ -195,23 +191,22 @@ def eval_model_accuracy(NN, train_ds, test_ds, holdout, save_model):
     """Compute and evaluate accuracy of NN model on testing and holdout data."""
     NN.eval()
     acc_train = calc_model_accuracy(model=NN, ds=train_ds)
-    print(f"[+] Training accuracy: {acc_train:0.4f}")
+    print(f"[+] Training accuracy: {acc_train * 100:0.2f}%")
 
     acc_test = calc_model_accuracy(model=NN, ds=test_ds)
-    print(f"[+] Testing accuracy: {acc_test:0.4f}")
+    print(f"[+] Testing accuracy:  {acc_test * 100:0.2f}%")
 
     # Make prediction on holdout data
     print(f"[+] Predicting on holdout {holdout['x']} | Target index: {holdout['y']}:")
-    torch_holdout = T.tensor([holdout['x']], dtype=T.float32).to(DEVICE)
+    torch_holdout = T.tensor(np.array([holdout['x']]), dtype=T.float32).to(DEVICE)
 
     with T.no_grad():
         logits = NN(torch_holdout)
     probs = T.exp(logits).numpy()
 
     _, pred_idx = np.where(probs == np.amax(probs))
-    print(f"[i] > Predicted target index: {pred_idx}")
     predict_res = "Correct" if holdout['y'] == pred_idx else "Incorrect"
-    print(f"[i] > {predict_res} prediction")
+    print(f"[i] > Predicted target index: {pred_idx} [ {predict_res} ]")
     
     np.set_printoptions(precision=4, suppress=True)
     print(probs)
@@ -221,8 +216,37 @@ def eval_model_accuracy(NN, train_ds, test_ds, holdout, save_model):
         T.save(NN.state_dict(), SAVED_MODEL_FN)
 
 
+def plot_loss(loss_stats) -> None:
+    """Plot epoch loss stats over each epoch."""
+    df_train_loss = (pd.DataFrame(loss_stats, columns=['loss'])
+                     .reset_index()
+                     .melt(id_vars=['index'])
+                     .rename(columns={'index': 'epochs'}))
+    df_train_loss.to_csv(TRAINING_LOSS_PLOTDATA_FN, index=False)
+
+    fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(14, 9))
+    sns.lineplot(data=df_train_loss, x = "epochs", y = "value").set(title='Training Loss / Epoch')
+    plt.show()
+
+
+def print_time_elapsed(start_time: float) -> None:
+    time_elapsed = time.time() - start_time
+    
+    if time_elapsed > 3600:
+        hours = time_elapsed // 3600
+        rest = time_elapsed % 3600
+        minutes = rest // 60
+        seconds = rest % 60
+        print(f"[+] Program finished in {int(hours)}h, {int(minutes)}m, {seconds:0.2f}s")
+    else:
+        minutes = time_elapsed // 60
+        seconds = time_elapsed % 60
+        print(f"[+] Program finished in {int(minutes)}m, {seconds:0.2f}s")
+
+
 def main() -> int:
     start_time = time.time()
+
     x_all, y_all = read_split_data()
     train, test, holdout = split_train_test_holdout(x_all=x_all, y_all=y_all)
     train_ds, test_ds = to_class_dataset(train=train, test=test)
@@ -230,18 +254,17 @@ def main() -> int:
     TRAIN_NEW_MODEL = True
 
     if TRAIN_NEW_MODEL:
-        NN = train_model(train_ds=train_ds, test_ds=test_ds)
+        NN, loss_stats = train_model(train_ds=train_ds, test_ds=test_ds)
     else:
         NN = Net()
         NN.load_state_dict(T.load(SAVED_MODEL_FN))
 
     eval_model_accuracy(NN=NN, train_ds=train_ds, test_ds=test_ds, holdout=holdout, save_model=TRAIN_NEW_MODEL)
 
-    time_elapsed = time.time() - start_time
-    minutes = time_elapsed // 60
-    seconds = time_elapsed % 60
-    print(f"[+] Program finished in {int(minutes)}m:{seconds:0.2f}s")
+    print_time_elapsed(start_time=start_time)
 
+    plot_loss(loss_stats=loss_stats)
+    
 
 if __name__ == '__main__':
     main()
