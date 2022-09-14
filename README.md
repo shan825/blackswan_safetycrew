@@ -22,6 +22,7 @@ GitHub Folder Structure
 -----------------------
 - Data: contains the data either simulated or collected.
 - Documents: contains the documents relevant to the project, either academic research papers, online warticles etc.
+- Models: contains saved PyTorch models that can be reloaded to run quickly since the model training is already complete.
 - Scripts: contains current scripts that are used for testing and analysis.
 - Test: contains deprecated scripts that are no longer being used as well as an explanation either in the code or the readme.md for why the script was abandoned for use.
 
@@ -45,6 +46,8 @@ To execute the codebase, each of the team developers used a different integrated
 
 Change Log
 ----------
+09-13-2022: Added models/ folder for storing trained PyTorch models for quick load and runs.
+
 09-12-2022: Multiple updates to the readme file.
 
 09-12-2022: Committed another iteration of a multi-class classification TensorFlow model.
