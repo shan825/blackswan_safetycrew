@@ -138,8 +138,8 @@ def train_model(train_ds, test_ds):
     loss_stats = []
     # scheduler = T.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min')
 
-    print(f"[+] 4L, {ACTIVATION_FUNC}, batch_size={BATCH_SIZE}, epochs={MAX_EPOCHS}", \
-        f"hidden={HIDDEN_LAYER_NODE_1, HIDDEN_LAYER_NODE_2, HIDDEN_LAYER_NODE_3}, learn_rate={LEARNING_RATE}")
+    print(f"[+] 4L, {ACTIVATION_FUNC}, batch_size={BATCH_SIZE}, epochs={MAX_EPOCHS},", \
+        f"learn_rate={LEARNING_RATE}, random_seed={RANDOM_SEED}")
     print("[+] Training model...")
 
     for epoch in range(0, MAX_EPOCHS):
@@ -222,7 +222,7 @@ def plot_loss(loss_stats) -> None:
                      .reset_index()
                      .melt(id_vars=['index'])
                      .rename(columns={'index': 'epochs'}))
-    df_train_loss.to_csv(TRAINING_LOSS_PLOTDATA_FN, index=False)
+    # df_train_loss.to_csv(TRAINING_LOSS_PLOTDATA_FN, index=False)
 
     fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(14, 9))
     sns.lineplot(data=df_train_loss, x = "epochs", y = "value").set(title='Training Loss / Epoch')
