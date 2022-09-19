@@ -47,7 +47,8 @@ To execute the codebase, each of the team developers used a different integrated
 
 Change Log
 ----------
-9-19-2022 Added Script for Visualization Creation Utilizing 800 Cases with 100% Accuracy for Some Testing Sets
+9-19-2022: Added Script for Visualization Creation Utilizing 800 Cases with 100% Accuracy for Some Testing Sets
+
 09-15-2022: Added model_results/ folder for storing "800 cases with 1 holdout" program results.
 
 09-13-2022: Added models/ folder for storing trained PyTorch models for quick load and runs.
