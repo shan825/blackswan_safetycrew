@@ -47,6 +47,8 @@ To execute the codebase, each of the team developers used a different integrated
 
 Change Log
 ----------
+09-15-2022: Added model_results/ folder for storing "800 cases with 1 holdout" program results.
+
 09-13-2022: Added models/ folder for storing trained PyTorch models for quick load and runs.
 
 09-12-2022: Multiple updates to the readme file.
