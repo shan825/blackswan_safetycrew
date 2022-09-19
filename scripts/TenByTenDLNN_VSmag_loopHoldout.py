@@ -31,8 +31,8 @@ INPUT_DATA_PATH = "../data/norm_tenByTenModelData.csv"
 DEVICE = T.device("cuda:0" if T.cuda.is_available() else "cpu")
 
 # Training/Testing Parameters
-RANDOM_SEED = 260
-TESTING_SPLIT_PERC = 0.3
+RANDOM_SEED = 160
+TESTING_SPLIT_PERC = 0.25
 
 # Model Parameters
 ACTIVATION_FUNC = 'Relu'
@@ -40,10 +40,10 @@ HIDDEN_LAYER_NODE_1 = 512
 HIDDEN_LAYER_NODE_2 = 128
 HIDDEN_LAYER_NODE_3 = 64
 
-MAX_EPOCHS = 4_000
+MAX_EPOCHS = 3_000
 EP_LOG_INTERVAL = MAX_EPOCHS / 4
 BATCH_SIZE = 40
-LEARNING_RATE = 0.01
+LEARNING_RATE = 0.02
 
 X_NORMALIZE_FACTOR = 10
 NUM_FEATURES = 3
@@ -154,8 +154,8 @@ def train_model(train_ds, test_ds):
             loss_val.backward()
             optimizer.step()
             
-        if epoch % EP_LOG_INTERVAL == 0:
-            print(f"[+] - epoch = {epoch:>5} | loss = {epoch_loss:8.4f}", end='\r')
+        # if epoch % EP_LOG_INTERVAL == 0:
+        #     print(f"[+] - epoch = {epoch:>5} | loss = {epoch_loss:8.4f}", end='\r')
 
     return NN
 
@@ -197,10 +197,10 @@ def eval_model_accuracy(NN, train_ds, test_ds, holdout):
     correct_pred_idx = holdout['y'] == pred_idx[0]
     predict_res = "Correct" if correct_pred_idx else "*Incorrect*"
 
-    results = f"[i] > Training accuracy: {acc_train * 100:0.2f}% | " + \
-        f"Testing: {acc_test * 100:0.2f}% | " + \
-        f"Prediction: {pred_idx[0]:>2} [ {predict_res} ]"
-    print(results)
+    # results = f"[i] > Training accuracy: {acc_train * 100:0.2f}% | " + \
+    #     f"Testing: {acc_test * 100:0.2f}% | " + \
+    #     f"Prediction: {pred_idx[0]:>2} [ {predict_res} ]"
+    # print(results)
 
     return acc_test, pred_idx[0], correct_pred_idx
 
@@ -209,8 +209,9 @@ def write_model_params(xl_writer):
     """Write model parameters to Excel file."""
     model_params = [
         ['User', 'doug'],
-        ['RunDate', TODAYS_DATE],
-        ['RunTime', TODAYS_TIME],
+        ['Date', TODAYS_DATE],
+        ['Time', TODAYS_TIME],
+        ['RunTime', 1],
         ['Packages', 'PyTorch'],
         ['Dataset', '10x10'],
         ['ActivationFunction', ACTIVATION_FUNC],
@@ -229,7 +230,7 @@ def write_model_params(xl_writer):
     df_model_params.to_excel(xl_writer, sheet_name='ModelParameters', index=False)
 
 
-def print_case_results(results, case_num):
+def print_case_results(results, case_num: int, start_time: float):
     """Print results from 800 cases and write model params, results to an Excel file."""
     results_cols = [
         'CaseNum',
@@ -246,6 +247,7 @@ def print_case_results(results, case_num):
     write_model_params(xl_writer=xl_writer)
 
     num_correct = df_case_results['CorrectPred'].sum()
+    num_incorrect = len(df_case_results) - num_correct
     perc_correct = f"{num_correct / len(df_case_results) * 100:0.2f}%"
 
     min_test_accuracy = f"{df_case_results['TestAccuracy'].min() * 100:0.2f}%"
@@ -254,35 +256,41 @@ def print_case_results(results, case_num):
     median_test_accuracy = f"{np.median(df_case_results['TestAccuracy']) * 100:0.2f}%"
     
     result_summary = [
-        ['Correct Predictions', perc_correct, f"{num_correct} / {len(df_case_results)}"],
+        ['Correct Predictions', perc_correct, num_incorrect],
         ['Test Accuracy:', '', ''],
         [' + Min', min_test_accuracy, ''],
         [' + Max', max_test_accuracy, ''],
         [' + Mean', mean_test_accuracy, ''],
         [' + Median', median_test_accuracy, '']
     ]
-    df_results_summary = pd.DataFrame(result_summary, columns=['Results', 'Percentage', 'Value'])
+    df_results_summary = pd.DataFrame(result_summary, columns=['Results', 'Percentage', 'Incorrect'])
     df_results_summary.to_excel(xl_writer, sheet_name='SummaryResults', index=False)
 
     df_case_results['TestAccuracy'] = df_case_results['TestAccuracy'].apply(lambda x: f"{x * 100:0.2f}%")
     df_case_results.to_excel(xl_writer, sheet_name='RawResults', index=False)
 
+    hours, minutes, seconds = print_time_elapsed(start_time=start_time)
+    params_ws = xl_writer.sheets['ModelParameters']
+    params_ws.write_string('B5', f"{hours}h, {minutes}m, {seconds}s")
+
     xl_writer.save()
 
 
-def print_time_elapsed(start_time: float) -> None:
+def print_time_elapsed(start_time: float):
     time_elapsed = time.time() - start_time
     
     if time_elapsed > 3600:
         hours = time_elapsed // 3600
         rest = time_elapsed % 3600
         minutes = rest // 60
-        seconds = rest % 60
+        seconds = round(rest % 60, 2)
         print(f"\n[+] Program finished in {int(hours)}h, {int(minutes)}m, {seconds:0.2f}s")
+        return hours, minutes, seconds
     else:
         minutes = time_elapsed // 60
-        seconds = time_elapsed % 60
+        seconds = round(time_elapsed % 60, 2)
         print(f"\n[+] Program finished in {int(minutes)}m, {seconds:0.2f}s")
+        return 0, minutes, seconds
 
 
 def main() -> int:
@@ -294,7 +302,9 @@ def main() -> int:
     for case_num in range(NUM_CASES):
         train, test, holdout = split_train_test_holdout(x_all=x_all, y_all=y_all, case_num=case_num)
         train_ds, test_ds = to_class_dataset(train=train, test=test)
-        print(f"\n[+] Case # {case_num + 1:>3}: holdout {holdout['x'] * 10} | Target: {holdout['y']}")
+        
+        if case_num % 25 == 0:
+            print(f"\n[+] Case # {case_num + 1:>3}: holdout {holdout['x'] * 10} | Target: {holdout['y']}")
 
         NN = train_model(train_ds=train_ds, test_ds=test_ds)
         acc_test, pred_idx, correct_prediction = eval_model_accuracy(
@@ -306,9 +316,8 @@ def main() -> int:
             [holdout['y'], pred_idx, correct_prediction, acc_test]
         results.append(case_results)
 
-    print_case_results(results=results, case_num=case_num)
-    print_time_elapsed(start_time=start_time)
-
+    print_case_results(results=results, case_num=case_num, start_time=start_time)
+    
 
 if __name__ == '__main__':
     main()
