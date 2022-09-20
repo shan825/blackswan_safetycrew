@@ -29,12 +29,12 @@ GitHub Folder Structure
 
 Data
 ----
-The datset for this project was provided by Dr. Lance Sherry.  It is comprised of 4 columns by 800 rows.  It is simulated data produced by Visual Basic for Applications (VBA) code.  This code was converted to Python ( [DataGeneration.py](https://github.com/shan825/blackswan_safetycrew/blob/main/scripts/DataGeneration.py) ).  This allowed the team to confirm that the input and target cases were correct, that the data was accurate, before building our NN model.
+The datset for this project was provided by Dr. Lance Sherry.  It is comprised of 4 columns by 800 rows.  It is simulated data produced by Visual Basic for Applications (VBA) code.  This code was converted to Python ( [NormalizedDataGeneration.py](https://github.com/shan825/blackswan_safetycrew/blob/main/scripts/NormalizedDataGeneration.py) ).  This allowed the team to confirm that the input and target cases were correct, that the data was accurate, before building our NN model.
 
 ### Dataset Variables:
-- xTemp: initial X position (representing temperature)
-- yVolume: initial Y position (representing volume)
-- direction: the initial direction the particle is moving
+- xTemp: initial X position (representing temperature), range 0-9
+- yVolume: initial Y position (representing volume), range 0-9
+- direction: the initial direction the particle is moving, range 0-7 where 0 is North, 1 is NE, 2 is East, etc
 - target: labeled variable neural network is trying to learn
 
 Code
@@ -47,7 +47,9 @@ To execute the codebase, each of the team developers used a different integrated
 
 Change Log
 ----------
-9-19-2022: Added Script for Visualization Creation Utilizing 800 Cases with 100% Accuracy for Some Testing Sets
+09-20-2022: Updated data generation file listed in Data section, added dataset variable ranges
+
+09-19-2022: Added Script for Visualization Creation Utilizing 800 Cases with 100% Accuracy for Some Testing Sets
 
 09-15-2022: Added model_results/ folder for storing "800 cases with 1 holdout" program results.
 
