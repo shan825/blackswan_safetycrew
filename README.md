@@ -47,6 +47,8 @@ To execute the codebase, each of the team developers used a different integrated
 
 Change Log
 ----------
+9-27-2022: Added Visualizations folder and an Examples subfolder to store visualizations 
+
 09-20-2022: Updated data generation file listed in Data section, added dataset variable ranges
 
 09-19-2022: Added Script for Visualization Creation Utilizing 800 Cases with 100% Accuracy for Some Testing Sets
