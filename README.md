@@ -26,6 +26,7 @@ GitHub Folder Structure
 - Models: contains saved PyTorch models that can be reloaded to run quickly since the model training is already complete.
 - Scripts: contains current scripts that are used for testing and analysis.
 - Test: contains deprecated scripts that are no longer being used as well as an explanation either in the code or the readme.md for why the script was abandoned for use.
+- Visualizations: contains Python programs used to visualize particle movement for each case
 
 Data
 ----
@@ -47,20 +48,20 @@ To execute the codebase, each of the team developers used a different integrated
 
 Change Log
 ----------
-9-27-2022: Added Visualizations folder and an Examples subfolder to store visualizations 
+9-27-2022: Added visualizations folder and an examples subfolder to store visualizations and associated code
 
-09-20-2022: Updated data generation file listed in Data section, added dataset variable ranges
+9-20-2022: Updated data generation file listed in Data section, added dataset variable ranges
 
-09-19-2022: Added Script for Visualization Creation Utilizing 800 Cases with 100% Accuracy for Some Testing Sets
+9-19-2022: Added Script for Visualization Creation Utilizing 800 Cases with 100% Accuracy for Some Testing Sets
 
-09-15-2022: Added model_results/ folder for storing "800 cases with 1 holdout" program results.
+9-15-2022: Added model_results/ folder for storing "800 cases with 1 holdout" program results.
 
-09-13-2022: Added models/ folder for storing trained PyTorch models for quick load and runs.
+9-13-2022: Added models/ folder for storing trained PyTorch models for quick load and runs.
 
-09-12-2022: Multiple updates to the readme file.
+9-12-2022: Multiple updates to the readme file.
 
-09-12-2022: Committed another iteration of a multi-class classification TensorFlow model.
+9-12-2022: Committed another iteration of a multi-class classification TensorFlow model.
 
-09-06-2022: Committed Sprint22TestCode.py.  Used previous team's code with our dataset and produced similar accuracy results.
+9-06-2022: Committed Sprint22TestCode.py.  Used previous team's code with our dataset and produced similar accuracy results.
 
-08-30-2022: The Github has been set up and the team is at work currently deciding how to tackle this problem, and the best methods and packages to use.
+8-30-2022: The Github has been set up and the team is at work currently deciding how to tackle this problem, and the best methods and packages to use.
