@@ -48,6 +48,8 @@ To execute the codebase, each of the team developers used a different integrated
 
 Change Log
 ----------
+10-1-2022: Added 3d_scatter_animated.py and 3d_scatter_animated.html for interactive version of 3D holdout scatterplot (in HTML file).
+
 9-27-2022: Added visualizations folder and an examples subfolder to store visualizations and associated code
 
 9-20-2022: Updated data generation file listed in Data section, added dataset variable ranges
