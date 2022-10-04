@@ -48,6 +48,12 @@ To execute the codebase, each of the team developers used a different integrated
 
 Change Log
 ----------
+10-4-2022: Added results file for PyTorch model.
+
+10-3-2022: Added results file for PyTorch model.
+
+10-3-2022: Added a first attempt for hyperparameter tuning for TensorFlow model.
+
 10-1-2022: Added 3d_scatter_animated.py and 3d_scatter_interactive.html for interactive version of 3D holdout scatterplot (in HTML file).
 
 9-27-2022: Added visualizations folder and an examples subfolder to store visualizations and associated code
