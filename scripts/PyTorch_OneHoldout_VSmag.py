@@ -28,7 +28,7 @@ TODAYS_DATE = datetime.now().strftime("%m-%d-%Y")
 TODAYS_TIME = datetime.now().strftime("%H:%M:%S %Z")
 
 USER = 'doug'
-INPUT_DATA_PATH = "../data/norm_tenByTenModelData.csv"
+INPUT_DATA_PATH = "../data/bounce_tenByTenModelData.csv"
 DEVICE = T.device("cuda:0" if T.cuda.is_available() else "cpu")
 
 
