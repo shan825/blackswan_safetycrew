@@ -48,6 +48,8 @@ To execute the codebase, each of the team developers used a different integrated
 
 Change Log
 ----------
+10-7-2022: Added a third attempt for HP tuning TF training model
+
 10-5-2022: Added a second attempt for hyperparameter tuning for TensorFlow model.
 
 10-4-2022: Added results file for PyTorch model.
