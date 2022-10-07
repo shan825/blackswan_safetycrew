@@ -67,7 +67,7 @@ class TrainingPlot(keras.callbacks.Callback):
             plt.xlabel("Epoch #")
             plt.ylabel("Loss/Accuracy")
             plt.legend()
-            plt.show()
+            #plt.show()
 
 # =============================================================================
 # Load Data
@@ -109,22 +109,28 @@ def build_model(hp):
   # Choose an optimal value from 0.01, 0.001, or 0.0001
   hp_learning_rate = hp.Choice('learning_rate', values = [1e-2, 1e-3, 1e-4]) 
 
+  ###COMMENT OUT THE OPTIMIZER YOU DON'T WANT TO USE
   model.compile(optimizer = optimizers.Adam(learning_rate = hp_learning_rate),
                   loss = 'categorical_crossentropy',
-                  metrics = ['accuracy'])  
+                  metrics = ['accuracy'])
+  
+  #model.compile(optimizer = optimizers.SGD(learning_rate = hp_learning_rate),
+                  loss = 'categorical_crossentropy',
+                  metrics = ['accuracy'])
   return model
 
 # =============================================================================
 # Initialize a tuner (here, RandomSearch). We use objective to 
 # specify the objective to select the best models, and we use 
 # max_trials to specify the number of different models to try.
+# Change project_name each time you run
 # =============================================================================
 
 tuner = kt.RandomSearch(
     build_model,
     objective='val_loss',
     max_trials=5,
-    project_name='bssc4')
+    project_name='bssc')
 
 # =============================================================================
 # Start the search and get the best model:
@@ -132,6 +138,6 @@ tuner = kt.RandomSearch(
 
 # Uncomment to run. It takes a while.
 tuner.search(Xf_train, yf_train, epochs = 1000, validation_data = (x_val, y_val), callbacks = [TrainingPlot()])
-plt.close()
+
 # Get the optimal hyperparameters
 best_hps = tuner.get_best_hyperparameters(num_trials = 1)[0]
