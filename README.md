@@ -48,6 +48,8 @@ To execute the codebase, each of the team developers used a different integrated
 
 Change Log
 ----------
+10-18-2-22: Added a fourth attempt for hyperparameter tuning for TensorFlow model.
+
 10-7-2022: Edited second script for functionality with hopper
 
 10-7-2022: Added a third attempt for HP tuning TF training model
