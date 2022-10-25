@@ -50,7 +50,7 @@ Change Log
 ----------
 10-24-2022: Code for Visualizations of HP's using TensorBoard in Section 3.3 of Report
 
-10-18-22: Added a fourth attempt for hyperparameter tuning for TensorFlow model.
+10-18-2022: Added a fourth attempt for hyperparameter tuning for TensorFlow model.
 
 10-7-2022: Edited second script for functionality with hopper
 
