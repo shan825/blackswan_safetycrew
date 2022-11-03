@@ -48,6 +48,8 @@ To execute the codebase, each of the team developers used a different integrated
 
 Change Log
 ----------
+11-3-2022: Added a TensorFlowRefactor script. Still needs work.
+
 11-1-2022: Added a second attempt at TF hold out script. Still needs work.
 
 10-24-2022: Code for Visualizations of HP's using TensorBoard in Section 3.3 of Report
