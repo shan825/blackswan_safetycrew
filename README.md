@@ -48,6 +48,8 @@ To execute the codebase, each of the team developers used a different integrated
 
 Change Log
 ----------
+11-7-2022: Added 5 TensorFlow results into the Model_results folder.
+
 11-4-2022: Added a TensorFlow_loopHoldout script that runs and mirrors PyTorch NN model script.
 
 11-3-2022: Added a TensorFlowRefactor script. Still needs work.
