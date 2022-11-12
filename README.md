@@ -48,6 +48,8 @@ To execute the codebase, each of the team developers used a different integrated
 
 Change Log
 ----------
+11-12-2022: Added Tensorflow and PyTorch results for SGD with 5 Layers and 0.09 momentum. Added correct PyTorch results for SGD with 5 Layers (no momentum).
+
 11-11-2022: Added Tensorflow and PyTorch results for SGD with 5 Layers.
 
 11-11-2022: Added 3 TensorFlow results files.
