@@ -48,6 +48,8 @@ To execute the codebase, each of the team developers used a different integrated
 
 Change Log
 ----------
+11-11-2022: Added Tensorflow and PyTorch results for SGD with 5 Layers.
+
 11-11-2022: Added 3 TensorFlow results files.
 
 11-9-2022: Added 2 TensorFlow results files.
