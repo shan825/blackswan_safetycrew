@@ -48,6 +48,8 @@ To execute the codebase, each of the team developers used a different integrated
 
 Change Log
 ----------
+11-21-2022: Added a heatmap and dot plot to visualizations folder. They show model performance for the top 10 models results.
+
 11-12-2022: Added Tensorflow and PyTorch results for SGD with 5 Layers and 0.09 momentum. Added correct PyTorch results for SGD with 5 Layers (no momentum).
 
 11-11-2022: Added Tensorflow and PyTorch results for SGD with 5 Layers.
