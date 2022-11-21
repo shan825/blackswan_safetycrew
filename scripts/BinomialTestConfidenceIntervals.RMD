@@ -1,0 +1,43 @@
+---
+title: "Confidence Intervals"
+author: "Kelly Johnson"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+#Libraries used 
+library(caret) #ML Model buidling package
+```
+
+## Exact binomial Test for Confidence Interval of Specific Trials
+
+### Trial 58
+```{r Trial 58}
+binom.test(790,800)
+```
+### Trials 50 and 52
+```{r Trial 50 and 52}
+binom.test(788,800)
+```
+### Trials 53 and 57
+```{r Trial 53 and 57}
+binom.test(783,800)
+```
+### Trial 55
+```{r Trial 55}
+binom.test(782,800)
+```
+### Trial 33
+```{r Trial 33}
+binom.test(781,800)
+```
+### Trials 51 and 56
+```{r Trial 51 and 56}
+binom.test(780,800)
+```
+### Trial 47
+```{r Trial 47}
+binom.test(779,800)
+```
