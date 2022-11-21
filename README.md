@@ -48,7 +48,7 @@ To execute the codebase, each of the team developers used a different integrated
 
 Change Log
 ----------
-11-21-2022: Added Confidence interval RMD script for top 10 TF/PT trials.
+11-21-2022: Added Confidence interval RMD script and results for top 10 TF/PT trials.
 
 11-21-2022: Added a heatmap and dot plot to visualizations folder. They show model performance for the top 10 models results.
 
