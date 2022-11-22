@@ -48,6 +48,8 @@ To execute the codebase, each of the team developers used a different integrated
 
 Change Log
 ----------
+11-22-2022: Added R scripts to make heatmap and multiple bar plots comparing 4 vs 5 layer models and PyTorch vs TensorFlow models.
+
 11-21-2022: Added Visio diagram of 4 and 5 Layer DLNN's.
 
 11-21-2022: Added Confidence interval RMD script and results for top 10 TF/PT trials.
