@@ -47,8 +47,9 @@ KERNEL_INITIALIZER = 'he_uniform'
 OUT_ACTIVATION_FUNC = 'softmax'
 LOSS_FUNCTION = 'sparse_categorical_crossentropy'
 HIDDEN_LAYER_NODE_1 = 512
-HIDDEN_LAYER_NODE_2 = 128
-HIDDEN_LAYER_NODE_3 = 64
+HIDDEN_LAYER_NODE_2 = 256
+HIDDEN_LAYER_NODE_3 = 128
+HIDDEN_LAYER_NODE_4 = 64
 
 MAX_EPOCHS = 2_500
 EP_LOG_INTERVAL = MAX_EPOCHS / 4
@@ -119,6 +120,9 @@ def train_model(train):
     NN.add(Dense(units=HIDDEN_LAYER_NODE_3,
                  activation=ACTIVATION_FUNC, kernel_initializer=initer))
     
+    NN.add(Dense(units=HIDDEN_LAYER_NODE_4,
+                 activation=ACTIVATION_FUNC, kernel_initializer=initer))
+
     NN.add(Dense(units=NUM_CLASSES,
                  activation=OUT_ACTIVATION_FUNC, kernel_initializer=initer))
 
@@ -155,6 +159,7 @@ def write_model_params(xl_writer):
         ['Dataset', '10x10'],
         ['ActivationFunction', ACTIVATION_FUNC],
         ['Optimizer', OPTIMIZER_STRING],
+        ['Momentum', MOMENTUM],
         ['RandomSeed', 'time'],
         ['BatchSize', BATCH_SIZE],
         ['Epochs', MAX_EPOCHS],
@@ -239,7 +244,7 @@ def main() -> int:
     x_all, y_all = read_split_data()
     results = []
 
-    for case_num in range(1):
+    for case_num in range(NUM_CASES):
         train, test, holdout = split_train_test_holdout(x_all=x_all, y_all=y_all, case_num=case_num)
 
         if case_num % 25 == 0:

@@ -20,13 +20,16 @@ In addition, the team leveraged the Momentum AI low-code/no-code toolkit hosted 
 
 GitHub Folder Structure
 -----------------------
-- Data: contains the data either simulated or collected.
-- Documents: contains the documents relevant to the project, either academic research papers, online warticles etc.
-- Model_results: contains model parameters, raw results, and results summary from running 800 case holdout program.
-- Models: contains saved PyTorch models that can be reloaded to run quickly since the model training is already complete.
-- Scripts: contains current scripts that are used for testing and analysis.
-- Test: contains deprecated scripts that are no longer being used as well as an explanation either in the code or the readme.md for why the script was abandoned for use.
-- Visualizations: contains Python programs used to visualize particle movement for each case
+- Data: contains the simulated data produced from data generation scripts in Python (see Data_generation folder below)
+- Data_generation: contains Python programs to generate simulated data for modeling
+- EDA: exploratory data analysis - contains scratch code and visualizations used in weekly progress presentations
+- Heatmap_data: contains our top 10 model results for use in making a heatmap (see visualizations folder)
+- Model_results: contains model parameters, raw results, and results summary from running 800 case holdout programs
+- Models: contains single saved PyTorch models that can be reloaded to run quickly, used in hyperparameter tuning
+- PyTorch: contains Python scripts to train deep learning neural networks with the PyTorch packages
+- R: contains R scripts to create visualizations for presentations
+- TensorFlow: contains Python scripts to train deep learning neural networks with the TensorFlow packages
+- Visualizations: contains resulting visualizations from R and Python programs
 
 Data
 ----
@@ -42,12 +45,28 @@ Code
 ----
 This project was completed across five sprints.  The initial sprint focused on problem definition and project ramp up, which involved development environment setup and completing required training.  This includes training to use the high performance computing clusters managed by the GMU Office of Research Computing and the Momentum AI low-code/no-code toolkit.  In addition, the team successfully reproduced the results of the [previous team](https://github.com/oelkassa/DAEN690digitaltwin/) that worked this project using the dataset described above.  The team focused on building Deep Learning classification models to identify the desired target classes using PyTorch and Keras/TensorFlow.  The goal of sprint two and three was to develop proofs of concept with increasing accuracy results ( [TenByTenDLNN_model_refactor.py](https://github.com/shan825/blackswan_safetycrew/blob/main/scripts/TenByTenDLNN_model_refactor.py) ) and ( [TF_MulticlassClassificationDLNN_BaselineModel1stAttempt.py](https://github.com/shan825/blackswan_safetycrew/blob/main/scripts/TF_MulticlassClassificationDLNN_BaselineModel1stAttempt.py) ).  In sprint five, the team delivered our minimum viable product (MVP) for each model implmentation.
 
+### Final Model Programs:
+Below are the final Python programs that we used to train PyTorch and TensorFlow models:
+- PyTorch - [PyTorch_DLNN_model.py](https://github.com/shan825/blackswan_safetycrew/blob/main/pytorch/PyTorch_DLNN_model.py)
+- TensorFlow - [TensorFlow_DLNN_model.py](https://github.com/shan825/blackswan_safetycrew/blob/main/tensorflow/TensorFlow_DLNN_model.py)
+
+Each of the above programs runs all 800 cases like so:
+1) Take out 1 case (holdout)
+2) Split remaining 799 into training and testing datasets (typically 80/20)
+3) Train a neural network model with respective package
+4) Model attempts to predict holdout case
+5) Record model results - predicted holdout correctly, testing accuracy
+6) Repeat for next case
+
 Executing Code
 --------------
 To execute the codebase, each of the team developers used a different integrated developement enviornment (IDE) or text editor to include Sublime Text, PyCharm, Jupyter Notebook, and Visual Studio Code.  Any editor/IDE should work with the code in this repository.
 
 Change Log
 ----------
+12-09-2022: Reorganized folders to split programs into those for PyTorch and TensorFlow models, those for data generation, and R scripts for creating visualizations
+Added code explanation to PyTorch and TensorFlow model programs so it is more apparent what each program is doing
+
 11-22-2022: Added R scripts to make heatmap and multiple bar plots comparing 4 vs 5 layer models and PyTorch vs TensorFlow models.
 
 11-21-2022: Added Visio diagram of 4 and 5 Layer DLNN's.

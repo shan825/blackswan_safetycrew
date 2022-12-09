@@ -104,7 +104,7 @@ gg_heat <- ggplot(aes(x = dir_X, y = dir_Y, color = n), data = heat_data) +
 
 # print(gg_heat)
 
-ggsave("../visualization/incorrectPredsHeatmapGray.png")
+ggsave("../visualization/heatmapIncorrectPredsGray.png")
 
 
 arrange(heat_data, desc(n))
